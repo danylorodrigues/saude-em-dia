@@ -1,0 +1,6 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+body { background-color: #f7f8fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+header { background: #fff; padding: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+main { flex: 1; padding: 2rem; }
+.content { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+footer { text-align: center; padding: 1rem; font-size: 0.9rem; background: #fafafa; border-top: 1px solid #e0e0e0; }
