@@ -1,6 +1,4 @@
-// ================================
 // 1. CARREGAR DADOS DO LOCALSTORAGE
-// ================================
 let dados = JSON.parse(localStorage.getItem("registros")) || [
   {
     id: 1,
