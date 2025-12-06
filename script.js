@@ -22,3 +22,39 @@ let dados = JSON.parse(localStorage.getItem("registros")) || [
 function salvarLocal() {
   localStorage.setItem("registros", JSON.stringify(dados));
 }
+
+// 2. CRIAR ELEMENTOS BASE NA PAGINA
+const content = document.querySelector(".content");
+content.innerHTML = `
+  <div id="filtros">
+    <input id="busca" type="text" placeholder="Buscar por título..." />
+    <select id="filtroCategoria">
+      <option value="Todas">Todas</option>
+      <option value="Alimentação">Alimentação</option>
+      <option value="Exercício">Exercício</option>
+      <option value="Descanso">Descanso</option>
+    </select>
+
+    <button id="ordenarNome">Ordenar por Nome</button>
+    <button id="ordenarData">Ordenar por Data</button>
+    <button id="ordenarCurtidas">Mais Curtidas</button>
+  </div>
+
+  <div id="conteudo"></div>
+
+  <h3>Novo Registro</h3>
+  <form id="cadastro">
+    <input type="text" id="titulo" placeholder="Título" required />
+    <input type="date" id="data" required />
+    <select id="categoria" required>
+      <option value="">Selecione a categoria</option>
+      <option value="Alimentação">Alimentação</option>
+      <option value="Exercício">Exercício</option>
+      <option value="Descanso">Descanso</option>
+    </select>
+    <textarea id="descricao" placeholder="Descrição"></textarea>
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <p id="mensagem" style="margin-top:10px; font-weight:bold;"></p>
+`;
