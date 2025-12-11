@@ -122,3 +122,38 @@ function filtrar() {
 
   renderizar(filtrados);
 }
+
+// 5. FORMULÁRIO DE CADASTRO
+
+document.querySelector("#cadastro").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const titulo = document.querySelector("#titulo").value.trim();
+  const data = document.querySelector("#data").value;
+  const categoria = document.querySelector("#categoria").value;
+  const descricao = document.querySelector("#descricao").value.trim();
+  const msg = document.querySelector("#mensagem");
+
+  if (titulo.length < 3) {
+    msg.textContent = "O título precisa ter no mínimo 3 caracteres.";
+    msg.style.color = "red";
+    return;
+  }
+
+  const novo = {
+    id: Date.now(),
+    titulo,
+    categoria,
+    data,
+    descricao,
+    curtidas: 0,
+  };
+
+  dados.push(novo);
+  salvarLocal();
+  renderizar();
+  msg.textContent = "Registro adicionado com sucesso!";
+  msg.style.color = "green";
+
+  e.target.reset();
+});
