@@ -104,3 +104,21 @@ function renderizar(lista = dados) {
 }
 
 renderizar();
+
+// 4. BUSCA E FILTRO POR CATEGORIA
+document.querySelector("#busca").addEventListener("input", filtrar);
+document.querySelector("#filtroCategoria").addEventListener("change", filtrar);
+
+function filtrar() {
+  const texto = document.querySelector("#busca").value.toLowerCase();
+  const categoria = document.querySelector("#filtroCategoria").value;
+
+  const filtrados = dados.filter((item) => {
+    const matchTitulo = item.titulo.toLowerCase().includes(texto);
+    const matchCategoria =
+      categoria === "Todas" ? true : item.categoria === categoria;
+    return matchTitulo && matchCategoria;
+  });
+
+  renderizar(filtrados);
+}
