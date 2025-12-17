@@ -157,3 +157,23 @@ document.querySelector("#cadastro").addEventListener("submit", (e) => {
 
   e.target.reset();
 });
+
+// 6. ORDENAÇÕES
+
+document.querySelector("#ordenarNome").addEventListener("click", () => {
+  dados.sort((a, b) => a.titulo.localeCompare(b.titulo));
+  salvarLocal();
+  renderizar();
+});
+
+document.querySelector("#ordenarData").addEventListener("click", () => {
+  dados.sort((a, b) => new Date(a.data) - new Date(b.data));
+  salvarLocal();
+  renderizar();
+});
+
+document.querySelector("#ordenarCurtidas").addEventListener("click", () => {
+  dados.sort((a, b) => b.curtidas - a.curtidas);
+  salvarLocal();
+  renderizar();
+});
