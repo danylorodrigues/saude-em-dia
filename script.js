@@ -58,3 +58,49 @@ content.innerHTML = `
 
   <p id="mensagem" style="margin-top:10px; font-weight:bold;"></p>
 `;
+
+// 3. FUNÇÃO DE RENDERIZAÇÃO DINÂMICA
+function renderizar(lista = dados) {
+  const area = document.querySelector("#conteudo");
+  area.innerHTML = "";
+
+  if (lista.length === 0) {
+    area.innerHTML = "<p>Nenhum registro encontrado.</p>";
+    return;
+  }
+
+  lista.forEach((item) => {
+    const card = document.createElement("div");
+    card.style.border = "1px solid #ddd";
+    card.style.padding = "1rem";
+    card.style.borderRadius = "8px";
+    card.style.marginBottom = "1rem";
+    card.style.background = "#fff";
+
+    card.innerHTML = `
+      <h3>${item.titulo}</h3>
+      <p><strong>Categoria:</strong> ${item.categoria}</p>
+      <p><strong>Data:</strong> ${item.data}</p>
+      <p>${item.descricao}</p>
+
+      <button class="curtir" data-id="${item.id}">
+         Curtir (${item.curtidas})
+      </button>
+    `;
+
+    area.appendChild(card);
+  });
+
+  // eventos de curtida
+  document.querySelectorAll(".curtir").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      const id = Number(btn.dataset.id);
+      const registro = dados.find((el) => el.id === id);
+      registro.curtidas++;
+      salvarLocal();
+      renderizar();
+    })
+  );
+}
+
+renderizar();
