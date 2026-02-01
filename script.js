@@ -1,29 +1,23 @@
-// 1. CARREGAR DADOS DO LOCALSTORAGE
-let dados = JSON.parse(localStorage.getItem("registros")) || [
-  {
-    id: 1,
-    titulo: "Caminhada Matinal",
-    categoria: "Exercício",
-    data: "2025-01-05",
-    descricao: "30 minutos de caminhada leve.",
-    curtidas: 0,
-  },
-  {
-    id: 2,
-    titulo: "Café da Manhã Saudável",
-    categoria: "Alimentação",
-    data: "2025-01-06",
-    descricao: "Mamão com aveia.",
-    curtidas: 2,
-  },
-];
+// CONFIGURAÇÃO DA API
+const API_URL = "http://localhost:3000/registros";
+let dados = [];
 
-// salva no localStorage
-function salvarLocal() {
-  localStorage.setItem("registros", JSON.stringify(dados));
+
+// 1. CARREGAR DADOS DA API (GET)
+
+async function carregarDados() {
+  try {
+    const resposta = await fetch(API_URL);
+    dados = await resposta.json();
+    renderizar();
+  } catch (erro) {
+    console.error("Erro ao carregar dados", erro);
+  }
 }
 
-// 2. CRIAR ELEMENTOS BASE NA PAGINA
+
+// 2. CRIAR ELEMENTOS NA PÁGINA
+
 const content = document.querySelector(".content");
 content.innerHTML = `
   <div id="filtros">
@@ -58,7 +52,10 @@ content.innerHTML = `
 
   <p id="mensagem" style="margin-top:10px; font-weight:bold;"></p>
 `;
-// 3. FUNÇÃO DE RENDERIZAÇÃO DINÂMICA
+
+
+// 3. RENDERIZAÇÃO
+
 function renderizar(lista = dados) {
   const area = document.querySelector("#conteudo");
   area.innerHTML = "";
@@ -83,49 +80,38 @@ function renderizar(lista = dados) {
       <p>${item.descricao}</p>
 
       <button class="curtir" data-id="${item.id}">
-         Curtir (${item.curtidas})
+        Curtir (${item.curtidas})
       </button>
     `;
 
     area.appendChild(card);
   });
 
-  // eventos de curtida
   document.querySelectorAll(".curtir").forEach((btn) =>
-    btn.addEventListener("click", () => {
-      const id = Number(btn.dataset.id);
-      const registro = dados.find((el) => el.id === id);
-      registro.curtidas++;
-      salvarLocal();
-      renderizar();
-    })
+    btn.addEventListener("click", () => curtirRegistro(btn.dataset.id))
   );
 }
 
-renderizar();
 
-// 4. BUSCA E FILTRO POR CATEGORIA
+// 4. CURTIR
 
-document.querySelector("#busca").addEventListener("input", filtrar);
-document.querySelector("#filtroCategoria").addEventListener("change", filtrar);
+async function curtirRegistro(id) {
+  const registro = dados.find((item) => item.id == id);
+  registro.curtidas++;
 
-function filtrar() {
-  const texto = document.querySelector("#busca").value.toLowerCase();
-  const categoria = document.querySelector("#filtroCategoria").value;
-
-  const filtrados = dados.filter((item) => {
-    const matchTitulo = item.titulo.toLowerCase().includes(texto);
-    const matchCategoria =
-      categoria === "Todas" ? true : item.categoria === categoria;
-    return matchTitulo && matchCategoria;
+  await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registro),
   });
 
-  renderizar(filtrados);
+  carregarDados();
 }
 
-// 5. FORMULÁRIO DE CADASTRO
 
-document.querySelector("#cadastro").addEventListener("submit", (e) => {
+// 5. CADASTRO
+
+document.querySelector("#cadastro").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const titulo = document.querySelector("#titulo").value.trim();
@@ -141,7 +127,6 @@ document.querySelector("#cadastro").addEventListener("submit", (e) => {
   }
 
   const novo = {
-    id: Date.now(),
     titulo,
     categoria,
     data,
@@ -149,31 +134,36 @@ document.querySelector("#cadastro").addEventListener("submit", (e) => {
     curtidas: 0,
   };
 
-  dados.push(novo);
-  salvarLocal();
-  renderizar();
+  await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(novo),
+  });
+
   msg.textContent = "Registro adicionado com sucesso!";
   msg.style.color = "green";
-
   e.target.reset();
+
+  carregarDados();
 });
+
 
 // 6. ORDENAÇÕES
 
 document.querySelector("#ordenarNome").addEventListener("click", () => {
   dados.sort((a, b) => a.titulo.localeCompare(b.titulo));
-  salvarLocal();
   renderizar();
 });
 
 document.querySelector("#ordenarData").addEventListener("click", () => {
   dados.sort((a, b) => new Date(a.data) - new Date(b.data));
-  salvarLocal();
   renderizar();
 });
 
 document.querySelector("#ordenarCurtidas").addEventListener("click", () => {
   dados.sort((a, b) => b.curtidas - a.curtidas);
-  salvarLocal();
   renderizar();
 });
+
+// INICIALIZAÇÃO
+carregarDados();

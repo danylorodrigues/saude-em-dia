@@ -1,0 +1,12 @@
+{
+  "registros": [
+    {
+      "id": 1,
+      "titulo": "Caminhada",
+      "categoria": "Exercício",
+      "data": "2025-01-20",
+      "descricao": "30 minutos de caminhada",
+      "curtidas": 2
+    }
+  ]
+}
