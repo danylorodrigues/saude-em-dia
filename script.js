@@ -1,4 +1,7 @@
 // CONFIGURAÇÃO DA API
+
+// IMPORTANTE: iniciar a API com "npx json-server db.json" antes de usar o sistema
+
 const API_URL = "http://localhost:3000/registros";
 let dados = [];
 
