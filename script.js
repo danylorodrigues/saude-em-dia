@@ -60,6 +60,31 @@ function renderizar(lista = dados) {
   const area = document.querySelector("#conteudo");
   area.innerHTML = "";
 
+  const inputBusca = document.querySelector("#busca");
+  const selectCategoria = document.querySelector("#filtroCategoria");
+
+  function aplicarFiltros() {
+    const textoBusca = inputBusca.value.toLowerCase();
+    const categoriaSelecionada = selectCategoria.value;
+
+    const filtrados = dados.filter((item) => {
+    const bateTexto =
+      item.titulo.toLowerCase().includes(textoBusca) ||
+      item.descricao.toLowerCase().includes(textoBusca);
+
+    const bateCategoria =
+      categoriaSelecionada === "Todas" ||
+      item.categoria === categoriaSelecionada;
+
+      return bateTexto && bateCategoria;
+    });
+
+    renderizar(filtrados);
+  }
+
+inputBusca.addEventListener("input", aplicarFiltros);
+selectCategoria.addEventListener("change", aplicarFiltros);
+
   if (lista.length === 0) {
     area.innerHTML = "<p>Nenhum registro encontrado.</p>";
     return;
